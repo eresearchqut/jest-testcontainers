@@ -4,11 +4,16 @@ Jest preset for running docker containers with your tests. Primary purpose is to
 [![Build Status](https://travis-ci.org/Trendyol/jest-testcontainers.svg?branch=master)](https://travis-ci.org/testcontainers/testcontainers-node)
 [![npm version](https://badge.fury.io/js/%40trendyol%2Fjest-testcontainers.svg)](https://badge.fury.io/js/%40trendyol%2Fjest-testcontainers)
 
+
+Fork of 
+* [7agustibm/jest-testcontainers](https://github.com/7agustibm/jest-testcontainers): Adds support for cmd
+* [Trendyol/ jest-testcontainers](https://github.com/Trendyol/jest-testcontainers): Base package
+
 ## Usage
 ### Install
 Docker should be installed on your system. If running inside a CI pipeline, see [FAQ.md](./FAQ.md).
 
-```npm install --save-dev @trendyol/jest-testcontainers```
+```npm install --save-dev @eresearchqut/jest-testcontainers```
 
 ### Edit Jest Config
 On your `jest.config.js` add the project as the preset.

@@ -1,0 +1,33 @@
+name: Build and Publish
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node 16 With Yarn Cache
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
+      - name: Configure Git User
+        run: |
+          git config --global user.email "eresearch@qut.edu.au"
+          git config --global user.name "@$GITHUB_ACTOR"
+      - name: Configure NPMRC
+        uses: ferluisxd/create-npmrc@3
+        env:
+          AUTH_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
+        with:
+          org_name: eresearchqut
+      - name: Build Package
+        run: |
+          npm run build
+          npm run test
+          npm run example:redis
+          npm run example:redis-typescript
