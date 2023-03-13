@@ -9,10 +9,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Node 16 With Yarn Cache
+      - name: Setup Node 18 With NPM Cache
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
           registry-url: 'https://npm.pkg.github.com'
           cache: 'npm'
       - name: Configure Git User
@@ -27,6 +27,7 @@ jobs:
           org_name: eresearchqut
       - name: Build Package
         run: |
+          npm install
           npm run build
           npm run test
           npm run example:redis
