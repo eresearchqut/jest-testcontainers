@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Trendyol/jest-testcontainers.git"
+    "url": "git+https://github.com/eresearchqut/jest-testcontainers.git"
   },
   "keywords": [
     "jest",
@@ -46,9 +46,9 @@
   "author": "Trendyol",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Trendyol/jest-testcontainers/issues"
+    "url": "https://github.com/eresearchqut/jest-testcontainers/issues"
   },
-  "homepage": "https://github.com/Trendyol/jest-testcontainers#readme",
+  "homepage": "https://github.com/eresearchqut/jest-testcontainers#readme",
   "devDependencies": {
     "@types/cwd": "^0.10.0",
     "@types/dockerode": "^3.3.0",
