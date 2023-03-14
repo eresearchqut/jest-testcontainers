@@ -38,7 +38,7 @@ export interface SingleContainerConfig {
   env?: EnvironmentVariableMap;
   wait?: WaitConfig;
   bindMounts?: BindConfig[];
-  cmd?: string[];
+  command?: string[];
 }
 
 interface PortsWaitConfig {

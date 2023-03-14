@@ -1,4 +1,3 @@
-import { Duration, TemporalUnit } from "node-duration";
 import {
   DockerComposeEnvironment,
   GenericContainer,
@@ -24,9 +23,7 @@ const addWaitStrategyToContainer = (waitStrategy?: WaitConfig) => (
     return container;
   }
   if (waitStrategy.type === "ports") {
-    return container.withStartupTimeout(
-      new Duration(waitStrategy.timeout, TemporalUnit.SECONDS)
-    );
+    return container.withStartupTimeout(waitStrategy.timeout * 1000);
   }
   if (waitStrategy.type === "text") {
     return container.withWaitStrategy(Wait.forLogMessage(waitStrategy.text));
@@ -41,7 +38,7 @@ const addEnvironmentVariablesToContainer = (env?: EnvironmentVariableMap) => (
     return container;
   }
   return Object.keys(env).reduce(
-    (newContainer, key) => newContainer.withEnv(key, env[key]),
+    (newContainer, key) => newContainer.withEnvironment({ [key]: env[key] }),
     container
   );
 };
@@ -59,19 +56,13 @@ const addBindsToContainer = (bindMounts?: BindConfig[]) => (
   container: TestContainer
 ): TestContainer => {
   if (!bindMounts) return container;
-
-  for (const bindMount of bindMounts) {
-    container.withBindMount(bindMount.source, bindMount.target, bindMount.mode);
-  }
-  return container;
-};
-
-const addCmdToContainer = (cmd?: string[]) => (
-  container: TestContainer
-): TestContainer => {
-  if (!cmd) return container;
-
-  container.withCmd(cmd);
+  container.withBindMounts(
+    bindMounts.map(bindMount => ({
+      source: bindMount.source,
+      target: bindMount.target,
+      mode: bindMount.mode
+    }))
+  );
   return container;
 };
 
@@ -82,6 +73,15 @@ const addNameToContainer = (name?: string) => (
     return container;
   }
   return container.withName(name);
+};
+
+const addCommandToContainer = (command?: string[]) => (
+  container: TestContainer
+): TestContainer => {
+  if (command === undefined) {
+    return container;
+  }
+  return container.withCommand(command);
 };
 
 export function buildTestcontainer(
@@ -95,16 +95,17 @@ export function buildTestcontainer(
     env,
     wait,
     bindMounts,
-    cmd
+    command
   } = containerConfig;
-  const container = new GenericContainer(image, tag);
+  const sanitizedTag = tag ?? "latest";
+  const container = new GenericContainer(`${image}:${sanitizedTag}`);
 
   return [
     addPortsToContainer(ports),
     addEnvironmentVariablesToContainer(env),
     addWaitStrategyToContainer(wait),
     addBindsToContainer(bindMounts),
-    addCmdToContainer(cmd)
+    addCommandToContainer(command)
   ].reduce<TestContainer>(
     (res, func) => func(res),
     addNameToContainer(name)(container)
@@ -119,12 +120,7 @@ export function buildDockerComposeEnvironment(
     dockerComposeConfig.composeFile
   );
   if (dockerComposeConfig?.startupTimeout) {
-    return environment.withStartupTimeout(
-      new Duration(
-        dockerComposeConfig.startupTimeout,
-        TemporalUnit.MILLISECONDS
-      )
-    );
+    return environment.withStartupTimeout(dockerComposeConfig.startupTimeout);
   }
   return environment;
 }
@@ -144,7 +140,7 @@ export function getMetaInfo(
 
   return {
     container,
-    ip: container.getContainerIpAddress(),
+    ip: container.getHost(),
     name: container.getName(),
     portMappings: (ports || []).reduce(
       (mapping, p: number) =>
