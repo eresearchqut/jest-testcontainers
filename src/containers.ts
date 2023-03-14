@@ -81,7 +81,17 @@ const addCommandToContainer = (command?: string[]) => (
   if (command === undefined) {
     return container;
   }
-  return container.withCommand(command);
+  container.withCommand(command);
+  return container;
+};
+
+const addEntrypointToContainer = (entrypoint?: string[]) => (
+  container: TestContainer
+): TestContainer => {
+  if (entrypoint === undefined) {
+    return container;
+  }
+  return container.withEntrypoint(entrypoint);
 };
 
 export function buildTestcontainer(
@@ -95,17 +105,18 @@ export function buildTestcontainer(
     env,
     wait,
     bindMounts,
-    command
+    command,
+    entrypoint
   } = containerConfig;
   const sanitizedTag = tag ?? "latest";
   const container = new GenericContainer(`${image}:${sanitizedTag}`);
-
   return [
     addPortsToContainer(ports),
     addEnvironmentVariablesToContainer(env),
     addWaitStrategyToContainer(wait),
     addBindsToContainer(bindMounts),
-    addCommandToContainer(command)
+    addCommandToContainer(command),
+    addEntrypointToContainer(entrypoint)
   ].reduce<TestContainer>(
     (res, func) => func(res),
     addNameToContainer(name)(container)

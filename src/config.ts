@@ -39,6 +39,7 @@ export interface SingleContainerConfig {
   wait?: WaitConfig;
   bindMounts?: BindConfig[];
   command?: string[];
+  entrypoint?: string[];
 }
 
 interface PortsWaitConfig {
@@ -104,7 +105,9 @@ function assertContainerConfigIsValid({
   name,
   wait,
   env,
-  bindMounts
+  bindMounts,
+  command,
+  entrypoint
 }: any): void {
   if (!image || image.constructor !== String || image.trim().length <= 0) {
     throw new JestTestcontainersConfigError("an image should be presented");
@@ -148,14 +151,42 @@ function assertContainerConfigIsValid({
     );
   }
 
+  if (command !== undefined && command.constructor !== Array) {
+    throw new JestTestcontainersConfigError("command should be a array");
+  }
+
+  if (entrypoint !== undefined && entrypoint.constructor !== Array) {
+    throw new JestTestcontainersConfigError("entrypoint should be a array");
+  }
+
   assertWaitConfig(wait);
   if (bindMounts) bindMounts.every(assertBindConfig);
 }
 
 function parseContainerConfig(config: any): JestTestcontainersConfig {
   assertContainerConfigIsValid(config);
-  const { image, tag, ports, name, env, wait, bindMounts } = config;
-  const parsed = { image, tag, ports, name, env, wait, bindMounts };
+  const {
+    image,
+    tag,
+    ports,
+    name,
+    env,
+    wait,
+    bindMounts,
+    command,
+    entrypoint
+  } = config;
+  const parsed = {
+    image,
+    tag,
+    ports,
+    name,
+    env,
+    wait,
+    bindMounts,
+    command,
+    entrypoint
+  };
 
   return Object.keys(parsed).reduce(
     (acc, key) => (key !== undefined ? { ...acc, [key]: config[key] } : acc),

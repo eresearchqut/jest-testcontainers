@@ -205,7 +205,7 @@ describe("containers", () => {
       ]);
     });
 
-    it("should set cmd correctly", () => {
+    it("should set command correctly", () => {
       // Arrange
       const config: SingleContainerConfig = {
         command: ["echo", "'hi'"],
