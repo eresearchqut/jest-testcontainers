@@ -32,3 +32,4 @@ jobs:
           npm run test
           npm run example:redis
           npm run example:redis-typescript
+          npm publish
