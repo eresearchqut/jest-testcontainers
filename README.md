@@ -1,8 +1,8 @@
 # jest-testcontainers
 Jest preset for running docker containers with your tests. Primary purpose is to make it possible to use any database in integration tests. Since it uses docker images, custom database images with different plugins/configurations can be used in the integration tests. Using [testcontainers-node](https://github.com/testcontainers/testcontainers-node) under the hood. Inspired by [@shelf/jest-mongodb](https://github.com/shelfio/jest-mongodb).
 
-[![Build Status](https://travis-ci.org/Trendyol/jest-testcontainers.svg?branch=master)](https://travis-ci.org/testcontainers/testcontainers-node)
-[![npm version](https://badge.fury.io/js/%40trendyol%2Fjest-testcontainers.svg)](https://badge.fury.io/js/%40trendyol%2Fjest-testcontainers)
+[![Build Status](https://github.com/eresearchqut/jest-testcontainers/blob/master/.github/workflows/build-package.yml/badge.svg)](https://travis-ci.org/testcontainers/testcontainers-node)
+[![npm version](https://badge.fury.io/js/%40eresearchqut%2Fjest-testcontainers.svg)](https://badge.fury.io/js/%40eresearchqut%2Fjest-testcontainers)
 
 
 Fork of 
@@ -20,7 +20,7 @@ On your `jest.config.js` add the project as the preset.
 
 ```js
 module.exports = {
-  preset: '@trendyol/jest-testcontainers'
+  preset: '@eresearchqut/jest-testcontainers'
 };
 ```
 
