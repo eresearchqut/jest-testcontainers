@@ -1,6 +1,8 @@
 import teardown from "./teardown";
 const CONTAINERS_GLOBAL_VARIABLE_KEY = "__TESTCONTAINERS__";
 
+import { describe, expect, it, jest } from '@jest/globals';
+
 describe("teardown", () => {
   describe("container stop logic", () => {
     it("should stop all containers registered in the global variable", async () => {

@@ -1,5 +1,7 @@
 import { JestTestcontainersConfig, parseConfig } from "./config";
 
+import { describe, expect, it } from '@jest/globals';
+
 describe("config", () => {
   describe("parseConfig", () => {
     it("should parse to object correctly", () => {

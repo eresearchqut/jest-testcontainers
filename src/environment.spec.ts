@@ -1,5 +1,7 @@
 import { setGlobalsWithJsonString } from "./environment";
 
+import { describe, expect, it } from '@jest/globals';
+
 describe("environment", () => {
   describe("setGlobalsWithJsonString", () => {
     it("should set variables to global correctly", () => {

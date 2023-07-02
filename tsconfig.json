@@ -18,6 +18,8 @@
     "src/**/*.spec.ts"
   ],
   "types": [
+    "node",
+    "jest",
     "./@types",
     "./types/global.d.ts"
   ]

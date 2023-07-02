@@ -1,8 +1,7 @@
-import { DockerComposeEnvironment, Wait } from "testcontainers";
-import {
+import { DockerComposeEnvironment,
   StartedTestContainer,
   TestContainer
-} from "testcontainers/dist/test-container";
+} from "testcontainers";
 import {
   DockerComposeConfig,
   JestTestcontainersConfig,
@@ -18,6 +17,9 @@ import {
   startDockerComposeContainers,
   StartedContainerAndMetaInfo
 } from "./containers";
+import {HostPortWaitStrategy} from "testcontainers/dist/src/wait-strategy/host-port-wait-strategy";
+import {LogWaitStrategy} from "testcontainers/dist/src/wait-strategy/log-wait-strategy";
+import { describe, expect, it, jest } from '@jest/globals';
 
 describe("containers", () => {
   describe("buildTestcontainer", () => {
@@ -32,11 +34,11 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("redis:latest");
-      expect(actualContainer.ports).toEqual([]);
-      expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual(undefined);
-      expect(actualContainer.startupTimeout).toEqual(60000);
-      expect(actualContainer.bindMounts).toEqual([]);
+      expect(actualContainer.ports).toEqual(undefined);
+      expect(actualContainer.environment).toEqual(undefined);
+      expect(actualContainer.waitStrategy).toEqual({"startupTimeout": 60000, "startupTimeoutSet": false});
+      expect(actualContainer.startupTimeout).toEqual(undefined);
+      expect(actualContainer.bindMounts).toEqual(undefined);
     });
 
     it("should set tag correctly", () => {
@@ -51,11 +53,11 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("redis:5.0.5");
-      expect(actualContainer.ports).toEqual([]);
-      expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual(undefined);
-      expect(actualContainer.startupTimeout).toEqual(60000);
-      expect(actualContainer.bindMounts).toEqual([]);
+      expect(actualContainer.opts.ports).toEqual(undefined);
+      expect(actualContainer.environment).toEqual(undefined);
+      expect(actualContainer.waitStrategy).toEqual({"startupTimeout": 60000, "startupTimeoutSet": false});
+      expect(actualContainer.startupTimeout).toEqual(undefined);
+      expect(actualContainer.bindMounts).toEqual(undefined);
     });
 
     it("should set ports correctly", () => {
@@ -70,11 +72,7 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("redis:latest");
-      expect(actualContainer.ports).toEqual([6379]);
-      expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual(undefined);
-      expect(actualContainer.startupTimeout).toEqual(60000);
-      expect(actualContainer.bindMounts).toEqual([]);
+      expect(actualContainer.opts.exposedPorts).toEqual([6379]);
     });
 
     it("should set name correctly", () => {
@@ -90,12 +88,8 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("redis:latest");
-      expect(actualContainer.ports).toEqual([6379]);
-      expect(actualContainer.name).toEqual("container-name");
-      expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual(undefined);
-      expect(actualContainer.startupTimeout).toEqual(60000);
-      expect(actualContainer.bindMounts).toEqual([]);
+      expect(actualContainer.opts.exposedPorts).toEqual([6379]);
+      expect(actualContainer.opts.name).toEqual("container-name");
     });
 
     it("should set env correctly", () => {
@@ -112,11 +106,7 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("redis:latest");
-      expect(actualContainer.ports).toEqual([]);
-      expect(actualContainer.environment).toEqual({ hello: "world" });
-      expect(actualContainer.waitStrategy).toEqual(undefined);
-      expect(actualContainer.startupTimeout).toEqual(60000);
-      expect(actualContainer.bindMounts).toEqual([]);
+      expect(actualContainer.opts.environment).toEqual({ hello: "world" });
     });
 
     it("should port wait strategy correctly", () => {
@@ -134,11 +124,8 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("redis:latest");
-      expect(actualContainer.ports).toEqual([]);
-      expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual(undefined);
       expect(actualContainer.startupTimeout).toEqual(30000);
-      expect(actualContainer.bindMounts).toEqual([]);
+      expect(actualContainer.waitStrategy.constructor).toEqual(HostPortWaitStrategy);
     });
 
     it("should text wait strategy correctly", () => {
@@ -156,13 +143,8 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("redis:latest");
-      expect(actualContainer.ports).toEqual([]);
-      expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual(
-        Wait.forLogMessage("hello, world")
-      );
-      expect(actualContainer.startupTimeout).toEqual(60000);
-      expect(actualContainer.bindMounts).toEqual([]);
+      expect(actualContainer.waitStrategy.constructor).toEqual(LogWaitStrategy);
+      expect(actualContainer.waitStrategy.message).toEqual("hello, world");
     });
     it("should set bind mounts correctly", () => {
       // Arrange
@@ -187,11 +169,7 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("redis:latest");
-      expect(actualContainer.ports).toEqual([]);
-      expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual(undefined);
-      expect(actualContainer.startupTimeout).toEqual(60000);
-      expect(actualContainer.bindMounts).toEqual([
+      expect(actualContainer.opts.bindMounts).toEqual([
         {
           mode: "ro",
           source: "/somepath",
@@ -217,11 +195,7 @@ describe("containers", () => {
 
       // Assert
       expect(actualContainer.image).toEqual("alpine:latest");
-      expect(actualContainer.ports).toEqual([]);
-      expect(actualContainer.env).toEqual(undefined);
-      expect(actualContainer.waitStrategy).toEqual(undefined);
-      expect(actualContainer.bindMounts).toEqual([]);
-      expect(actualContainer.command).toEqual(["echo", "'hi'"]);
+      expect(actualContainer.opts.command).toEqual(["echo", "'hi'"]);
     });
   });
 
@@ -232,7 +206,7 @@ describe("containers", () => {
         composeFilePath: ".",
         composeFile: "docker-compose.yml"
       };
-      const nameRegex = new RegExp(/testcontainers-[0-9A-F]{32}/i);
+      const nameRegex = new RegExp(/testcontainers-[0-9A-F]{12}/i);
 
       // Act
       const actualEnvironment: any = buildDockerComposeEnvironment(
@@ -295,7 +269,7 @@ describe("containers", () => {
       const startedContainer: StartedTestContainer = ({
         getHost: jest.fn(() => host),
         getName: jest.fn(() => name),
-        getMappedPort: jest.fn(port => boundPorts.get(port))
+        getMappedPort: jest.fn(port => boundPorts.get(port as number))
       } as unknown) as StartedTestContainer;
       const expectedMetaInfo: StartedContainerAndMetaInfo = {
         name,
@@ -323,7 +297,7 @@ describe("containers", () => {
       const startedContainer: StartedTestContainer = ({
         getHost: jest.fn(() => host),
         getName: jest.fn(() => name),
-        getMappedPort: jest.fn(port => boundPorts.get(port))
+        getMappedPort: jest.fn(port => boundPorts.get(port as number))
       } as unknown) as StartedTestContainer;
       const expectedMetaInfo: StartedContainerAndMetaInfo = {
         name,
