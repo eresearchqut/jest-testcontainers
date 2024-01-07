@@ -11,7 +11,8 @@ import {
   JestTestcontainersConfig,
   SingleContainerConfig,
   WaitConfig,
-  BindConfig
+  BindConfig,
+  ResourcesQuotaConfig
 } from "./config";
 
 const addWaitStrategyToContainer = (waitStrategy?: WaitConfig) => (
@@ -92,6 +93,15 @@ const addEntrypointToContainer = (entrypoint?: string[]) => (
   return container.withEntrypoint(entrypoint);
 };
 
+const addResourcesQuotaToContainer = (resourcesQuota?: ResourcesQuotaConfig) => (
+  container: TestContainer
+): TestContainer => {
+  if (resourcesQuota === undefined) {
+      return container;
+  }
+  return container.withResourcesQuota(resourcesQuota);
+}
+
 export function buildTestcontainer(
   containerConfig: SingleContainerConfig
 ): TestContainer {
@@ -104,7 +114,8 @@ export function buildTestcontainer(
     wait,
     bindMounts,
     command,
-    entrypoint
+    entrypoint,
+    resourcesQuota,
   } = containerConfig;
   const sanitizedTag = tag ?? "latest";
   const container = new GenericContainer(`${image}:${sanitizedTag}`);
@@ -114,7 +125,8 @@ export function buildTestcontainer(
     addWaitStrategyToContainer(wait),
     addBindsToContainer(bindMounts),
     addCommandToContainer(command),
-    addEntrypointToContainer(entrypoint)
+    addEntrypointToContainer(entrypoint),
+    addResourcesQuotaToContainer(resourcesQuota),
   ].reduce<TestContainer>(
     (res, func) => func(res),
     addNameToContainer(name)(container)

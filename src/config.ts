@@ -40,6 +40,7 @@ export interface SingleContainerConfig {
   bindMounts?: BindConfig[];
   command?: string[];
   entrypoint?: string[];
+  resourcesQuota?: ResourcesQuotaConfig;
 }
 
 interface PortsWaitConfig {
@@ -56,6 +57,11 @@ export interface BindConfig {
   source: string;
   target: string;
   mode: BindMode;
+}
+
+export interface ResourcesQuotaConfig {
+  memory?: number;
+  cpu?: number;
 }
 
 // https://github.com/testcontainers/testcontainers-node/blob/v2.7.0/src/docker-client.ts#L48
@@ -174,7 +180,8 @@ function parseContainerConfig(config: any): JestTestcontainersConfig {
     wait,
     bindMounts,
     command,
-    entrypoint
+    entrypoint,
+    resourcesQuota,
   } = config;
   const parsed = {
     image,
@@ -185,7 +192,8 @@ function parseContainerConfig(config: any): JestTestcontainersConfig {
     wait,
     bindMounts,
     command,
-    entrypoint
+    entrypoint,
+    resourcesQuota,
   };
 
   return Object.keys(parsed).reduce(
