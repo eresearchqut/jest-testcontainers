@@ -69,7 +69,7 @@
     "testcontainers": "10.9.0"
   },
   "engines" : {
-    "node" : ">=14.0.0"
+    "node" : ">=20.0.0"
   },
   "peerDependencies": {
     "jest-environment-node": ">=29"
