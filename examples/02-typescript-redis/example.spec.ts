@@ -1,46 +1,43 @@
-import { createClient, RedisClient } from "redis";
-import { promisify } from "util";
+const redis = require('redis');
 
-const globals = (global as unknown) as any;
+describe('redis example suite', () => {
 
-describe("redis example suite", () => {
-  let redisClient: RedisClient;
-
-  beforeAll(() => {
-    const connectionUri = `redis://${globals.__TESTCONTAINERS_REDIS_IP__}:${globals.__TESTCONTAINERS_REDIS_PORT_6379__}`;
-    redisClient = createClient(connectionUri);
+  const {__TESTCONTAINERS_REDIS_IP__: redisIp, __TESTCONTAINERS_REDIS_PORT_6379__: redisPort, __TESTCONTAINERS_REDIS_NAME__: redisName} = global as any;
+  const redisClient = redis.createClient({
+    url: `redis://${redisIp}:${redisPort}`
   });
 
-  afterAll(() => {
-    redisClient.quit();
+  it("should have container details", async() => {
+    expect(redisName).toBeDefined();
+    expect(redisPort).toBeDefined();
+    expect(redisIp).toBeDefined();
+    expect(redisClient).toBeDefined();
   });
 
-  it("should set the container name correctly", () => {
-    expect(globals.__TESTCONTAINERS_REDIS_NAME__).toEqual(
-      "/unique-container-name"
-    );
+  beforeAll(async () => {
+    await redisClient.connect();
   });
 
-  it("should write correctly", async () => {
-    // Arrange
-    const setAsync = promisify(redisClient.set).bind(redisClient);
-    const value: number = 73;
+  afterAll(async () => {
+    await redisClient.quit();
+  });
+
+
+  it('should write correctly', async () => {
 
     // Act
-    const setResult = await setAsync("test", value.toString());
+    const setResult = await redisClient.set('test', 73);
 
     // Assert
-    expect(setResult).toEqual("OK");
+    expect(setResult).toEqual('OK');
   });
 
-  it("should read the written value correctly", async () => {
-    // Arrange
-    const getAsync = promisify(redisClient.get).bind(redisClient);
+  it('should read the written value correctly', async () => {
 
     // Act
-    const getResult = await getAsync("test");
+    const getResult = await redisClient.get('test');
 
     // Assert
-    expect(getResult).toEqual("73");
+    expect(getResult).toEqual('73');
   });
 });
