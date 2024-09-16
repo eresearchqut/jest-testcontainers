@@ -9,7 +9,7 @@ services:
   wiremock:
     image: wiremock/wiremock
     container_name: wiremock
-    command: --disable-banner --proxy-all="http://smocker:8081"
+    command: --disable-banner --proxy-all="http://smocker:8081" --record-mappings
     ports:
       - "8080:8080"
     volumes:
