@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+  smocker:
+    image: ghcr.io/smocker-dev/smocker
+    container_name: smocker
+    ports:
+      - "8081:8081"
+      - "18080:8080"
+  wiremock:
+    image: wiremock/wiremock
+    container_name: wiremock
+    command: --disable-banner --proxy-all="http://smocker:8081"
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./.wiremocks:/home/wiremock:rw"
