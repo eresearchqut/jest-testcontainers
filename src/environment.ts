@@ -12,10 +12,9 @@ export function setGlobalsWithJsonString(globals: any, jsonString: string) {
   const globalVarKeys = Object.keys(globalVars);
 
   globalVarKeys.forEach(globalVarKey => {
-    log.debug(`${globals[globalVarKey]}=${globalVars[globalVarKey]}`);
     // @ts-ignore
+    log.debug(`${globalVarKey}=${globalVars[globalVarKey]}`);
     globals[globalVarKey] = globalVars[globalVarKey];
-
   });
 }
 
