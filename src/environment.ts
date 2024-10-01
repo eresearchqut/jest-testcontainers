@@ -1,17 +1,19 @@
 import { readFileSync } from "fs";
 import NodeEnvironment from "jest-environment-node";
-import { join } from "path";
 import { Script } from "vm";
+import {log} from "./logger";
+import {GLOBAL_VARS_JSON_PATH} from "./setup";
 
-const GLOBAL_VARS_JSON_PATH = join(__dirname, "global.vars.json");
 
 export function setGlobalsWithJsonString(globals: any, jsonString: string) {
   const globalVars = JSON.parse(jsonString);
   const globalVarKeys = Object.keys(globalVars);
 
   globalVarKeys.forEach(globalVarKey => {
+    log.debug(`${globals[globalVarKey]}=${globalVars[globalVarKey]}`);
     // @ts-ignore
     globals[globalVarKey] = globalVars[globalVarKey];
+
   });
 }
 
@@ -22,8 +24,8 @@ export class TestcontainersEnvironment extends NodeEnvironment {
   }
 
   public async setup() {
+    log.debug(`Reading global vars from ${GLOBAL_VARS_JSON_PATH}`);
     const globalVarsJsonString = readFileSync(GLOBAL_VARS_JSON_PATH, "utf-8");
-
     setGlobalsWithJsonString(this.global, globalVarsJsonString);
     await super.setup();
   }
