@@ -6,6 +6,8 @@ import {
   startAllContainers
 } from "./containers";
 
+import { log } from "./logger";
+
 const GLOBAL_VARS_JSON_PATH = join(__dirname, "global.vars.json");
 const createEnv = (name: string, key: string) =>
   `__TESTCONTAINERS_${name.toUpperCase()}_${key.toUpperCase()}__`;
@@ -46,6 +48,7 @@ async function setup(opts: any) {
     allStartedContainersMetaInfo
   );
 
+  log.debug(`Writing global env: ${JSON.stringify({location: GLOBAL_VARS_JSON_PATH, globalEnv})}`);
   writeFileSync(GLOBAL_VARS_JSON_PATH, JSON.stringify(globalEnv), "utf-8");
   // @ts-ignore
   global.__TESTCONTAINERS__ = Object.values(allStartedContainersMetaInfo).map(

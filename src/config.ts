@@ -2,6 +2,8 @@ import cwd from "cwd";
 import { existsSync } from "fs";
 import { isAbsolute, resolve } from "path";
 
+
+
 class JestTestcontainersConfigError extends Error {
   constructor(msg: string) {
     super(msg);
