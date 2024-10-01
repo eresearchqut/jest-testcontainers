@@ -2,8 +2,10 @@ import { readFileSync } from "fs";
 import NodeEnvironment from "jest-environment-node";
 import { Script } from "vm";
 import {log} from "./logger";
-import {GLOBAL_VARS_JSON_PATH} from "./setup";
+import {join} from "path";
 
+
+export const GLOBAL_VARS_JSON_PATH = join(__dirname, "global.vars.json");
 
 export function setGlobalsWithJsonString(globals: any, jsonString: string) {
   const globalVars = JSON.parse(jsonString);
