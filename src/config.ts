@@ -43,6 +43,7 @@ export interface SingleContainerConfig {
   command?: string[];
   entrypoint?: string[];
   resourcesQuota?: ResourcesQuotaConfig;
+  withPrivilegedMode?: boolean;
 }
 
 interface PortsWaitConfig {

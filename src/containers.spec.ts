@@ -78,6 +78,22 @@ describe("containers", () => {
       expect(actualContainer.exposedPorts).toEqual([6379]);
     });
 
+
+    it("should set with privileged mode correctly", () => {
+      // Arrange
+      const config: SingleContainerConfig = {
+        image: "redis",
+        withPrivilegedMode: true
+      };
+
+      // Act
+      const actualContainer: any = buildTestcontainer(config);
+
+      // Assert
+      expect(actualContainer.imageName.image).toEqual("redis");
+      expect(actualContainer.hostConfig.Privileged).toEqual(true);
+    });
+
     it("should set name correctly", () => {
       // Arrange
       const config: SingleContainerConfig = {
