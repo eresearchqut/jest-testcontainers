@@ -83,7 +83,7 @@ describe("containers", () => {
       // Arrange
       const config: SingleContainerConfig = {
         image: "redis",
-        withPrivilegedMode: true
+        privileged: true
       };
 
       // Act

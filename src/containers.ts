@@ -102,10 +102,10 @@ const addResourcesQuotaToContainer = (resourcesQuota?: ResourcesQuotaConfig) => 
   return container.withResourcesQuota(resourcesQuota);
 }
 
-const addWithPrivilegedMode = (withPrivilegedMode?: boolean) => (
+const addWithPrivilegedMode = (privileged?: boolean) => (
     container: TestContainer
 ): TestContainer => {
-  if (!withPrivilegedMode) {
+  if (privileged === undefined || !privileged) {
     return container;
   }
   return container.withPrivilegedMode();
@@ -125,7 +125,7 @@ export function buildTestcontainer(
     command,
     entrypoint,
     resourcesQuota,
-      withPrivilegedMode
+    privileged
   } = containerConfig;
   const sanitizedTag = tag ?? "latest";
   const container = new GenericContainer(`${image}:${sanitizedTag}`);
@@ -137,7 +137,7 @@ export function buildTestcontainer(
     addCommandToContainer(command),
     addEntrypointToContainer(entrypoint),
     addResourcesQuotaToContainer(resourcesQuota),
-    addWithPrivilegedMode(withPrivilegedMode)
+    addWithPrivilegedMode(privileged)
   ].reduce<TestContainer>(
     (res, func) => func(res),
     addNameToContainer(name)(container)

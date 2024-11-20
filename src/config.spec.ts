@@ -8,6 +8,7 @@ describe("config", () => {
       // Arrange
       const firstContainer: any = {
         image: "first",
+        privileged: true,
         wait: {
           text: "hello",
           type: "text"
@@ -35,6 +36,7 @@ describe("config", () => {
       const expectedConfig: JestTestcontainersConfig = {
         first: {
           image: "first",
+          privileged: true,
           wait: {
             text: "hello",
             type: "text"

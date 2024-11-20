@@ -1,6 +1,6 @@
 {
   "name": "@eresearchqut/jest-testcontainers",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "Jest preset for starting docker containers that stay up while your tests run.",
   "main": "dist/index",
   "types": "dist/index",

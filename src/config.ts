@@ -43,7 +43,7 @@ export interface SingleContainerConfig {
   command?: string[];
   entrypoint?: string[];
   resourcesQuota?: ResourcesQuotaConfig;
-  withPrivilegedMode?: boolean;
+  privileged?: boolean;
 }
 
 interface PortsWaitConfig {
@@ -185,6 +185,7 @@ function parseContainerConfig(config: any): JestTestcontainersConfig {
     command,
     entrypoint,
     resourcesQuota,
+    privileged
   } = config;
   const parsed = {
     image,
@@ -197,6 +198,7 @@ function parseContainerConfig(config: any): JestTestcontainersConfig {
     command,
     entrypoint,
     resourcesQuota,
+    privileged
   };
 
   return Object.keys(parsed).reduce(
