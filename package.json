@@ -1,6 +1,6 @@
 {
   "name": "@eresearchqut/jest-testcontainers",
-  "version": "3.7.1",
+  "version": "3.7.2",
   "description": "Jest preset for starting docker containers that stay up while your tests run.",
   "main": "dist/index",
   "types": "dist/index",
@@ -52,7 +52,7 @@
   "homepage": "https://github.com/eresearchqut/jest-testcontainers#readme",
   "devDependencies": {
     "@types/cwd": "^0.10.2",
-    "@types/dockerode": "^3.3.32",
+    "@types/dockerode": "^3.3.37",
     "@types/node": "^22.9.1",
     "@types/jest": "^29.5.14",
     "@types/debug": "^4.1.12",
@@ -69,8 +69,8 @@
   },
   "dependencies": {
     "cwd": "^0.10.0",
-    "testcontainers": "10.14.0",
-    "debug": "^4.3.7"
+    "testcontainers": "10.24.2",
+    "debug": "^4.4.0"
   },
   "engines" : {
     "node" : ">=20.0.0"
