@@ -37,7 +37,7 @@ describe("containers", () => {
       expect(actualContainer.imageName.tag).toEqual("latest");
       expect(actualContainer.ports).toEqual(undefined);
       expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual({"startupTimeout": 60000, "startupTimeoutSet": false});
+      expect(actualContainer.waitStrategy).toEqual({"startupTimeoutMs": 60000, "startupTimeoutSet": false});
       expect(actualContainer.startupTimeout).toEqual(undefined);
       expect(actualContainer.bindMounts).toEqual(undefined);
     });
@@ -57,7 +57,7 @@ describe("containers", () => {
       expect(actualContainer.imageName.tag).toEqual("5.0.5");
       expect(actualContainer.createOpts.ports).toEqual(undefined);
       expect(actualContainer.environment).toEqual({});
-      expect(actualContainer.waitStrategy).toEqual({"startupTimeout": 60000, "startupTimeoutSet": false});
+      expect(actualContainer.waitStrategy).toEqual({"startupTimeoutMs": 60000, "startupTimeoutSet": false});
       expect(actualContainer.startupTimeout).toEqual(undefined);
       expect(actualContainer.bindMounts).toEqual(undefined);
     });
@@ -142,7 +142,7 @@ describe("containers", () => {
       const actualContainer: any = buildTestcontainer(config);
 
       // Assert
-      expect(actualContainer.startupTimeout).toEqual(30000);
+      expect(actualContainer.startupTimeoutMs).toEqual(30000);
       expect(actualContainer.waitStrategy.constructor).toEqual(HostPortWaitStrategy);
     });
 
@@ -242,7 +242,7 @@ describe("containers", () => {
       );
 
       // Assert
-      expect(actualEnvironment.startupTimeout).toEqual(60000);
+      expect(actualEnvironment.defaultWaitStrategy.startupTimeoutMs).toEqual(60000);
     });
   });
 
